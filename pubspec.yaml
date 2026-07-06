@@ -1,0 +1,50 @@
+name: app_queen
+description: A new Flutter project for App Queen catalog.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Core & Backend
+  supabase_flutter: ^2.5.2
+  flutter_dotenv: ^5.1.0
+  
+  # State Management
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.5
+  
+  # Dependency Injection
+  get_it: ^7.7.0
+  
+  # Navigation & Utilities
+  go_router: ^14.0.0
+  cached_network_image: ^3.3.1
+  
+  # UI
+  cupertino_icons: ^1.0.6
+  share_plus: ^13.1.0
+  marquee: ^2.3.0
+  url_launcher: ^6.3.0
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.2
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/images/logo_app.png"
+  min_sdk_android: 21
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
+    - assets/images/
