@@ -13,6 +13,7 @@ class CatalogBloc extends Bloc<CatalogEvent, CatalogState> {
     on<FetchCatalogProducts>(_onFetchCatalogProducts);
     on<AddCatalogProduct>(_onAddCatalogProduct);
     on<UpdateCatalogProduct>(_onUpdateCatalogProduct);
+    on<DeleteCatalogProduct>(_onDeleteCatalogProduct);
     on<FilterCatalogByCategory>(_onFilterCatalogByCategory);
     on<FilterCatalogByGender>(_onFilterCatalogByGender);
     on<SearchCatalog>(_onSearchCatalog);
@@ -82,6 +83,16 @@ class CatalogBloc extends Bloc<CatalogEvent, CatalogState> {
       UpdateCatalogProduct event, Emitter<CatalogState> emit) async {
     try {
       await _catalogRepository.updateProduct(event.product);
+      add(FetchCatalogProducts());
+    } catch (e) {
+      emit(CatalogError(e.toString().replaceAll('Exception: ', '')));
+    }
+  }
+
+  Future<void> _onDeleteCatalogProduct(
+      DeleteCatalogProduct event, Emitter<CatalogState> emit) async {
+    try {
+      await _catalogRepository.deleteProduct(event.productId);
       add(FetchCatalogProducts());
     } catch (e) {
       emit(CatalogError(e.toString().replaceAll('Exception: ', '')));

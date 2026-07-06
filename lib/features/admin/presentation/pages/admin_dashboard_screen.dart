@@ -510,7 +510,54 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     : const Icon(Icons.image),
                 title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text('\$${product.price.toStringAsFixed(2)} - ${product.category}'),
-                trailing: const Icon(Icons.edit, color: AppColors.crimson),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: AppColors.crimson),
+                      tooltip: 'Editar',
+                      onPressed: () => _showEditDialog(product),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                      tooltip: 'Eliminar',
+                      onPressed: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            title: const Text('¿Eliminar producto?'),
+                            content: Text('"${product.name}" será eliminado permanentemente.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(false),
+                                child: const Text('Cancelar'),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.redAccent,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: () => Navigator.of(ctx).pop(true),
+                                child: const Text('Eliminar'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true && context.mounted) {
+                          context.read<CatalogBloc>().add(DeleteCatalogProduct(product.id));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Producto eliminado'),
+                              backgroundColor: Colors.redAccent,
+                              duration: Duration(seconds: 3),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
                 onTap: () => _showEditDialog(product),
               );
             },
@@ -1066,6 +1113,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        if (!isAuthenticated)
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                context.push('/login');
+                              },
+                              child: const Text(
+                                'Iniciar Sesión / Registrarse →',
+                                style: TextStyle(color: Colors.white70, fontSize: 12),
+                              ),
+                            ),
+                          ),
                         const Text(
                           'Total del Pedido',
                           style: TextStyle(

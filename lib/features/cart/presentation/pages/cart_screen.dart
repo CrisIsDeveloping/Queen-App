@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../bloc/cart_bloc.dart';
 import '../bloc/cart_event.dart';
@@ -70,10 +72,32 @@ class _CartScreenState extends State<CartScreen> {
 
       if (!mounted) return;
 
-      // 4. Vaciar el carrito local
+      // 4. Construir mensaje de WhatsApp
+      final phone = dotenv.env['WHATSAPP_NUMBER'] ?? '';
+      
+      final StringBuffer sb = StringBuffer();
+      sb.writeln('Hola Queen Bodys, quiero realizar el siguiente pedido:');
+      sb.writeln('');
+      for (var item in state.items) {
+        sb.writeln('- ${item.quantity}x ${item.product.name} (\$${item.product.price.toStringAsFixed(2)})');
+      }
+      sb.writeln('');
+      sb.writeln('Total: \$${state.totalPrice.toStringAsFixed(2)}');
+      
+      final encodedMessage = Uri.encodeComponent(sb.toString());
+      final whatsappUrl = Uri.parse('https://wa.me/$phone?text=$encodedMessage');
+
+      // 5. Vaciar el carrito local
       context.read<CartBloc>().add(ClearCart());
 
-      // 5. Ir a la pantalla de éxito
+      // 6. Lanzar WhatsApp y luego ir a la pantalla de éxito
+      if (await canLaunchUrl(whatsappUrl)) {
+        await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+      } else {
+        debugPrint('No se pudo abrir WhatsApp. Verifica el número.');
+      }
+
+      if (!mounted) return;
       context.go('/checkout-success', extra: {
         'userName': userName,
         'total': state.totalPrice,

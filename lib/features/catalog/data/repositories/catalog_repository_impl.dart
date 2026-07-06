@@ -85,6 +85,15 @@ class CatalogRepositoryImpl implements CatalogRepository {
   }
 
   @override
+  Future<void> deleteProduct(String productId) async {
+    try {
+      await _supabaseClient.from('products').delete().eq('id', productId);
+    } catch (e) {
+      throw Exception('Error al eliminar el producto: $e');
+    }
+  }
+
+  @override
   Future<List<Category>> getCategories() async {
     try {
       // Ordenamos alfabéticamente o por id si se prefiere

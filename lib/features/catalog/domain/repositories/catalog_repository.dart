@@ -5,6 +5,7 @@ abstract class CatalogRepository {
   Future<List<Product>> getProducts({String? category, String? gender});
   Future<void> insertProduct(Product product);
   Future<void> updateProduct(Product product);
+  Future<void> deleteProduct(String productId);
 
   Future<List<Category>> getCategories();
   Future<void> insertCategory(String name);

@@ -12,6 +12,7 @@ class ProductModel extends Product {
     required super.category,
     required super.gender,
     required super.inStock,
+    super.isPreorder = false,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {

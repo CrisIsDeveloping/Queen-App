@@ -28,6 +28,15 @@ class UpdateCatalogProduct extends CatalogEvent {
   List<Object> get props => [product];
 }
 
+class DeleteCatalogProduct extends CatalogEvent {
+  final String productId;
+
+  const DeleteCatalogProduct(this.productId);
+
+  @override
+  List<Object> get props => [productId];
+}
+
 class FilterCatalogByCategory extends CatalogEvent {
   final String categoryName;
 

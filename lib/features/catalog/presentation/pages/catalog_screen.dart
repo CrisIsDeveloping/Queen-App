@@ -403,15 +403,20 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       ),
                     ],
                     if (!isAuthenticated)
-                      TextButton(
-                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          context.push('/login');
-                        },
-                        child: const Text(
-                          'Iniciar Sesión / Registrarse',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.push('/login');
+                          },
+                          icon: const Icon(Icons.login, color: Colors.white70, size: 14),
+                          label: const Text(
+                            'Iniciar Sesión / Registrarse',
+                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                          ),
                         ),
                       ),
                   ],
